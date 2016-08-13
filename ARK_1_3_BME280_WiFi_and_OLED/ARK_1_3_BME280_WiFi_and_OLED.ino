@@ -1,5 +1,5 @@
 //  ArkSystems IoT classroom sample program 3 of 1st session
-// 
+//
 //  BME280から気温,気圧湿度高度を読んでシリアルポートに出力し、OLEDへ表示、1分ごとにThnkgSpeakへ送信
 //
 //  Thanks : Spark fun's Library and sample "I2C_ReadAllData.ino"
@@ -13,6 +13,15 @@
 //    Copyright (c) 2016 by Daniel Eichhorn
 //    Copyright (c) 2016 by Fabrice Weinberg
 //    https://github.com/squix78/esp8266-oled-ssd1306/blob/master/examples/SSD1306UiDemo/SSD1306UiDemo.ino
+//
+//  Thanks : Paul Stoffregen's Time Library
+//    time.c :   Copyright (c) Michael Margolis 2009-2014
+//
+//    This library is free software; you can redistribute it and/or
+//    modify it under the terms of the GNU Lesser General Public
+//    License as published by the Free Software Foundation; either
+//    version 2.1 of the License, or (at your option) any later version.
+//    https://github.com/PaulStoffregen/Time
 //
 
 
@@ -30,9 +39,9 @@ BME280 mySensor;
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
-#include "../../private_ssid.h"
-//const char *ssid   = "*************";
-//const char *pass   = "*************";
+//  #include "../../private_ssid.h"
+const char *ssid       = "*************";
+const char *password   = "*************";
 String      apiKey = "U09JSMUGWE0D92PX";
 
 WiFiClient client;
@@ -41,13 +50,13 @@ WiFiClient client;
 //
 //  時間
 #include <Time.h>
+#include <TimeLib.h>
 
 
 //
 //  OLED
 //
-#include "SSD1306.h"
-#include "SSD1306Ui.h"
+#include <SSD1306.h>
 
 SSD1306   display(0x3c, 4, 5);
 
@@ -82,10 +91,10 @@ void setup() {
   //  接続＆接続確認
   Serial.print("WiFi Connectiong");
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(500); //  0.5秒
-  }
+  //  while (WiFi.status() != WL_CONNECTED) {
+  //    Serial.print(".");
+  //    delay(500); //  0.5秒
+  //  }
   Serial.println("connected");
 
   //
@@ -159,14 +168,16 @@ void loop() {
   display.drawString(127, 32, pBuf);
   display.display();
 
-  
+
   //
   //  1分ごとにThingSpeakへ送出
   if (prevMinute != minute()) {
 
-    String postStr = "&field1=" + String(tBuf) + "&field2=" + String(hBuf) + "&field3=" + String(pBuf);
+    if (WiFi.status() == WL_CONNECTED) {
+      String postStr = "&field1=" + String(tBuf) + "&field2=" + String(hBuf) + "&field3=" + String(pBuf);
 
-    sendToThingSpeak(postStr);
+      sendToThingSpeak(postStr);
+    }
     prevMinute = minute();
   }
 
