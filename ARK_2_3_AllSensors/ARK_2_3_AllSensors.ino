@@ -31,10 +31,10 @@ BME280 mySensor;
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
-#include "../../private_ssid.h"
-//const char *ssid   = "*************";
-//const char *pass   = "*************";
-//String apiKeyArk   = "*************";
+//#include "../../private_ssid.h"
+const char *ssid       = "*************";
+const char *password   = "*************";
+String apiKeyArk       = "*************";
 
 WiFiClient client;
 
@@ -51,7 +51,6 @@ int prevMinute = -1;  //  分単位の処理をするためのフラグ
 //  OLED
 //
 #include "SSD1306.h"
-#include "SSD1306Ui.h"
 
 SSD1306   display(0x3c, 4, 5);
 
@@ -93,7 +92,7 @@ void setup() {
   //
   //  設定パラメータをセット
   mySensor.settings.commInterface = I2C_MODE;
-  mySensor.settings.I2CAddress = 0x77;
+  mySensor.settings.I2CAddress = 0x76;
   mySensor.settings.runMode = 3; //Normal mode
   mySensor.settings.tStandby = 0;
   mySensor.settings.filter = 0;
