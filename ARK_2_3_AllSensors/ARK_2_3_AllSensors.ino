@@ -32,9 +32,9 @@ BME280 mySensor;
 #include <WiFiClient.h>
 
 //#include "../../private_ssid.h"
-const char *ssid       = "*************";
-const char *password   = "*************";
-String apiKeyArk       = "*************";
+const char *ssid       = "*****************";
+const char *password   = "*****************";
+String apiKeyArk       = "*****************";
 
 WiFiClient client;
 
