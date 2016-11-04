@@ -3,6 +3,9 @@
 //  BME280から気温,気圧湿度高度,PIRから1分間の動き, 空気質センサー…を読んでシリアルポートに出力し、
 //  OLEDへ表示、1分ごとにThnkgSpeakへ送信
 //
+//  2016-11-04 : fix i2c address. bme280's default address was different.
+//  2016-11-04 : stop inverting display.
+//
 //  Thanks : Spark fun's Library and sample "I2C_ReadAllData.ino"
 //  "BME280 Arduino and Teensy example
 //   by Marshall Taylor @ SparkFun Electronics
@@ -31,10 +34,9 @@ BME280 mySensor;
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
-//#include "../../private_ssid.h"
-const char *ssid       = "*****************";
-const char *password   = "*****************";
-String apiKeyArk       = "*****************";
+const char *ssid       = "****************";
+const char *password   = "****************";
+String apiKeyArk       = "****************";
 
 WiFiClient client;
 
@@ -61,7 +63,7 @@ SSD1306   display(0x3c, 4, 5);
 //
 const int kPIRSensor = 12;
 volatile int pirCounter = 0;  // volatileは最適化せずメモリに置いとけというコンパイラへの指示
-// 割り込みの中でアクセスする変数などに指定。
+                              // 割り込みの中でアクセスする変数などに指定。
 
 
 //
@@ -121,16 +123,11 @@ void setup() {
   //  接続＆接続確認
   Serial.print("WiFi Connectiong");
   WiFi.begin(ssid, password);
-  //  while (WiFi.status() != WL_CONNECTED) {
-  //    Serial.print(".");
-  //    delay(500); //  0.5秒
-  //  }
-  //  Serial.println("connected");
 
   //
   //  OLED
   display.init();
-  display.flipScreenVertically();
+  //  display.flipScreenVertically();
   display.displayOn();
   display.clear();
 }
@@ -259,6 +256,8 @@ void sendToThingSpeak(String inPostStr) {
     client.print("\n\n");
     client.print(postStr);
     Serial.println("posted.");
+  } else {
+    Serial.println("wifi or thing speak is not ready.check connection.");
   }
   client.stop();
 }

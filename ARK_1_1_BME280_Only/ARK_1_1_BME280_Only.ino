@@ -2,6 +2,8 @@
 // 
 //  BME280から気温,気圧湿度高度を読んでシリアルポートに出力
 //
+//  2016-11-04 : fix i2c address. bme280's default address was different.
+//
 //  Thanks : Spark fun's Library and sample "I2C_ReadAllData.ino"
 //  "BME280 Arduino and Teensy example
 //   by Marshall Taylor @ SparkFun Electronics
@@ -31,7 +33,7 @@ void setup() {
   //
   //  設定パラメータをセット
   mySensor.settings.commInterface = I2C_MODE;
-  mySensor.settings.I2CAddress = 0x77;  
+  mySensor.settings.I2CAddress = 0x76;  
   mySensor.settings.runMode = 3; //Normal mode
   mySensor.settings.tStandby = 0;
   mySensor.settings.filter = 0;

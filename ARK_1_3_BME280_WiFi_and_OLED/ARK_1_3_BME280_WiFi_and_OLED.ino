@@ -2,6 +2,9 @@
 //
 //  BME280から気温,気圧湿度高度を読んでシリアルポートに出力し、OLEDへ表示、1分ごとにThnkgSpeakへ送信
 //
+//  2016-11-04 : fix i2c address. bme280's default address was different.
+//  2016-11-04 : stop inverting display.
+//
 //  Thanks : Spark fun's Library and sample "I2C_ReadAllData.ino"
 //  "BME280 Arduino and Teensy example
 //   by Marshall Taylor @ SparkFun Electronics
@@ -39,10 +42,9 @@ BME280 mySensor;
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
-//  #include "../../private_ssid.h"
 const char *ssid       = "*************";
 const char *password   = "*************";
-String      apiKey = "U09JSMUGWE0D92PX";
+String      apiKey = "*****************";
 
 WiFiClient client;
 
@@ -73,7 +75,7 @@ void setup() {
   //
   //  設定パラメータをセット
   mySensor.settings.commInterface = I2C_MODE;
-  mySensor.settings.I2CAddress = 0x77;
+  mySensor.settings.I2CAddress = 0x76;
   mySensor.settings.runMode = 3; //Normal mode
   mySensor.settings.tStandby = 0;
   mySensor.settings.filter = 0;
@@ -100,7 +102,7 @@ void setup() {
   //
   //  OLED
   display.init();
-  display.flipScreenVertically();
+  //  display.flipScreenVertically();
   display.displayOn();
   display.clear();
 }

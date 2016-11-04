@@ -2,6 +2,8 @@
 //
 //  PIRセンサの出力をGPIO 12から読み込んでシリアルに出力する
 //
+//  2016-11-04 : delete damn wait routine
+//
 
 
 //
@@ -40,7 +42,8 @@ void setup() {
   //
   //  Serial
   Serial.begin(115200);
-
+  Serial.println("");
+  Serial.println("start measurement!");
   //
   //  GPIO
   pinMode(kPIRSensor, INPUT); // PIR Sensorを入力モードで使う
@@ -52,10 +55,6 @@ void setup() {
   
   //
   //  fetch timing adjustment
-  prevMinute = minute();
-  while (prevMinute == minute()) {
-    delay(100);
-  }
   prevMinute = -1;
 }
 
